@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+<meta content="telephone=no" name="format-detection" />
+<title>无标题文档</title>
+<style>
+	body{margin: 0;}
+	.boxs{
+		text-align: center;
+		font-family: Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", "serif";
+		position: relative;
+		float: left;
+	}
+	.box-content{
+		background-color: #FFF;
+		border: 2px solid #333;
+		position: absolute;
+		z-index: 2;
+	}
+	.box-shadow{
+		background-image: url(images/bgp.png);
+		border: 2px solid #333;
+		position: absolute;
+		z-index: 1;
+	}
+	
+	.selected .box-content{
+		color: #FFF;
+		background-color: #ff6100;
+	}
+	.box-content *{vertical-align: top;}
+	.numberic{
+		
+	}
+	.slash{
+		font-size: 8px;
+	}
+</style>
+</head>
+
+<body>
+	<div class="boxs progress-bar" style="width: 300px;height: 30px;" shifting="5px" value="35">正在将你的行李和人格匹配中</div>
+	<!--
+		class
+			boxs 必须属性，表明这是个带阴影的框
+			progress-bar 可选属性，配合value属性来表明这是一个进度条
+		style 必须把宽度和高度写在这里，否则框不会有宽度和高度
+		shifting 设置影子错位的大小（偏移量）
+		value 进度条的值，在0-100内有意义
+	-->
+	<div class="boxs" style="width: 100px;height: 30px;" shifting="15px"><span class="numberic">1</span><span class="slash">／</span>台灯</div>
+	<div class="boxs selected" style="width: 100px;height: 30px;" shifting="15px"><span class="numberic">2</span><span class="slash">／</span>花露水</div>
+	<script>
+		var boxs = document.getElementsByClassName("boxs");
+		for( var y = 0, j = boxs.length; y < j; y++){
+			var boxContent = boxs[y].innerHTML;
+			//框的正文内容
+			var boxContentWidth = boxs[y].style.width;
+			//框的宽度
+			var boxContentHeight = boxs[y].style.height;
+			//框的高度
+			var boxContentLineHeight = boxs[y].style.height;
+			//框的行高，用于垂直居中
+			var shifting = boxs[y].getAttribute("shifting");
+			//阴影的偏移量
+			boxs[y].style.width = parseInt(boxContentWidth)+parseInt(shifting)+4+"px";
+			//这一行用来自动判断框的长度，额外+4的原因是边框占用了4像素
+			boxs[y].style.height = parseInt(boxContentHeight)+parseInt(shifting)+4+"px";
+			//这一行用来自动判断框的宽度，额外+4的原因是边框占用了4像素
+			
+			boxs[y].innerHTML = "<div class='box-content' style='width:"+boxContentWidth+";height:"+boxContentHeight+";line-height:"+boxContentLineHeight+";'>" + boxContent + "</div><div class='box-shadow' style='width:"+boxContentWidth+";height:"+boxContentHeight+";top:"+ shifting +";left:"+ shifting +";'></div>";
+			//设置boxs框的内容
+		}
+		
+		var progressBars = document.getElementsByClassName("progress-bar");
+		for( var y = 0, j = progressBars.length; y < j; y++){
+			setInterval(function(){
+				currentValue = progressBars[0].getAttribute("value");
+				progressBars[0].getElementsByClassName("box-content")[0].style.backgroundImage = "linear-gradient(to right, #ff6100 "+currentValue+"%, #fff 0)";				
+				//重要！在正式生产环境务必删掉这行代码，否则导致进度条自动上涨
+				progressBars[0].setAttribute("value",parseInt(currentValue) + 1);
+				//重要！在正式生产环境务必删掉这行代码，否则导致进度条自动上涨
+			},1000);
+			//在这里设置进度条更新的速度
+		}
+	</script>
+</body>
+</html>
